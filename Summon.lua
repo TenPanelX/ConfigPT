@@ -1,1 +1,4 @@
-return false;
+return {
+  ['Enabled'] = false,
+  ['Roll'] = false,
+};

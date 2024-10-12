@@ -9,6 +9,6 @@ shared.Configs = {
     AutoTrading = {
         ['Enabled'] = true,
         ['Main User'] = 'CatLordEarth',
-        ['JobID'] = '',
+        ['JobID'] = '22f52f55-0a6b-4ae6-a185-c45e74816d49',
     },
 };

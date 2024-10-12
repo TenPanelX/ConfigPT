@@ -8,7 +8,7 @@ shared.Configs = {
     TradingMode = false,
     AutoTrading = {
         ['Enabled'] = false,
-        ['Main User'] = '',
+        ['Main User'] = 'CrabSpring',
         ['JobID'] = '',
     },
 };

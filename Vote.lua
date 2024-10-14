@@ -6,7 +6,7 @@
     while task.wait(0.03) do 
         local result,Error = pcall(function()
             if PlayerGui.MainUI.Frames.Voting.Visible then 
-                if LocalPlayer:DistanceFromCharacter(CFrameCheck.Position) <= 500 then 
+                if LocalPlayer:DistanceFromCharacter(CFrameCheck.Position) >= 500 then 
                     local args = {
                         [1] = "Medium"
                     }

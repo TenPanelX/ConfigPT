@@ -6,6 +6,7 @@ shared.Configs = {
     GithubConfigUrl = 'https://raw.githubusercontent.com/TenPanelX/ConfigPT/refs/heads/main/ConfigPerPC/R9.lua',
     JobID = '',
     TradingMode = false,
+    FiveNightFarm = false,
     AutoTrading = {
         ['Enabled'] = false,
         ['Main User'] = 'CatLordEarth',

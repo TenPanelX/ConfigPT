@@ -2,7 +2,7 @@ shared.Configs = {
     Enabled = true,
     RedeemCode = true,
     Speed = 2,  
-    GithubUrl = 'https://raw.githubusercontent.com/TenPanelX/ConfigPT/refs/heads/main/SummonR9.lua',
+    GithubUrl = 'https://raw.githubusercontent.com/TenPanelX/ConfigPT/refs/heads/main/Summon.lua',
     GithubConfigUrl = 'https://raw.githubusercontent.com/TenPanelX/ConfigPT/refs/heads/main/ConfigPerPC/R9.lua',
     JobID = '',
     TradingMode = false,
@@ -10,8 +10,8 @@ shared.Configs = {
     Difficulty = 'Hard',
     AutoSkipWave = true,
     AutoTrading = {
-        ['Enabled'] = false,
+        ['Enabled'] = true,
         ['Main User'] = 'CatLordEarth',
-        ['JobID'] = '',
+        ['JobID'] = '24ba442d-d265-4d96-a4fe-f57f1fd825f0',
     },
 };

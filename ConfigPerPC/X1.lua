@@ -10,8 +10,8 @@ shared.Configs = {
     Difficulty = 'Medium',
     AutoSkipWave = true,
     AutoTrading = {
-        ['Enabled'] = true,
+        ['Enabled'] = false,
         ['Main User'] = 'KobeLensKid', -- Username Host
-        ['JobID'] = 'c32260ba-1f61-45f9-894a-f2253222b84c', -- ต้องแก้ JobID ทุกครั้งก่อน Trade
+        ['JobID'] = '', -- ต้องแก้ JobID ทุกครั้งก่อน Trade
     },
 };

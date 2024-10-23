@@ -12,6 +12,6 @@ shared.Configs = {
     AutoTrading = {
         ['Enabled'] = true,
         ['Main User'] = 'KobeLensKid', -- Username Host
-        ['JobID'] = 'bd6feef9-fb54-48b1-af1c-61c64eb60304', -- ต้องแก้ JobID ทุกครั้งก่อน Trade
+        ['JobID'] = 'c32260ba-1f61-45f9-894a-f2253222b84c', -- ต้องแก้ JobID ทุกครั้งก่อน Trade
     },
 };

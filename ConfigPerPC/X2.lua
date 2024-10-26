@@ -10,8 +10,8 @@ shared.Configs = {
     Difficulty = 'Hard',
     AutoSkipWave = true,
     AutoTrading = {
-        ['Enabled'] = true,
+        ['Enabled'] = false,
         ['Main User'] = 'XxSoulxXDude',
-        ['JobID'] = '4ab730ea-6415-494e-b0bd-e3b920856f8a',
+        ['JobID'] = '',
     },
 };

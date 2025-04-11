@@ -1,4 +1,4 @@
-
+-- New3
 local Debug = true
 
 --LPH_NO_UPVALUES = function(...) return ... end

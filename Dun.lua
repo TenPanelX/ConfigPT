@@ -1,4 +1,4 @@
--- New4
+-- New5
 local Debug = true
 
 --LPH_NO_UPVALUES = function(...) return ... end
@@ -973,11 +973,17 @@ function Collection:AutoEquipWeapon()
 end
 function Collection:getNearestEnemy()
 	local closest
-	local shortestDistance = 400
+	local shortestDistance = math.huge
 
 	for _, obj in pairs(workspace.Characters:GetChildren()) do
 		if obj ~= LocalPlayer.Character and obj:FindFirstChild("Humanoid") and obj:FindFirstChild("HumanoidRootPart") and obj.Humanoid.Health > 0 and not game.Players:FindFirstChild(obj.Name) and not game.Players:FindFirstChild(tostring(obj.Name)) then
 			local dist = (obj.HumanoidRootPart.Position - LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude
+			if dist < shortestDistance then
+				closest = obj
+				shortestDistance = dist
+			end
+		elseif obj ~= LocalPlayer.Character and not obj:FindFirstChild("HumanoidRootPart") and not game.Players:FindFirstChild(obj.Name) and not game.Players:FindFirstChild(tostring(obj.Name)) then 
+			local dist = (obj:GetModelCFrame().Position - LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude
 			if dist < shortestDistance then
 				closest = obj
 				shortestDistance = dist
@@ -1010,102 +1016,111 @@ local Part_Proprerties = {Name = "Deity-Tween",Anchored = true,Transparency = 1,
 local RoomCheck = nil
 function Collection:TeleportTo(Object)
 	 --Collection:TeleportCFrame(Object)  r
-	 local room = RoomCheck
-	if room and room:FindFirstChild("Floor") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum").Text == "☠️" then 
-		LocalPlayer.Character:PivotTo(Object * CFrame.new(0,-2,0))
-	else 
-		local distance = (LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - Object.Position).Magnitude
-		local Linear = LocalPlayer.Character:FindFirstChild("HumanoidRootPart").AssemblyLinearVelocity
-		LocalPlayer.Character:FindFirstChild("HumanoidRootPart").AssemblyLinearVelocity = Linear * Vector3.new(1, 0, 1, 0)
-		if distance >= 500 then 
-			local Position = (typeof(Object) == "CFrame") and Object.Position or Object
-			local HumanoidRootPart = Collection:GetRoot(LocalPlayer.Character)
-			local Always_Distancing =  Collection:GetSelfDistance(Position)
-			local InBetween_Part = Workspace:FindFirstChild("Deity-Tween") or Instance.new("Part",workspace)
-			for Proprerty,Value in pairs(Part_Proprerties) do InBetween_Part[Proprerty] = Value end
-			local DistanceFromPart = Collection:GetSelfDistance(InBetween_Part.Position)
-			local Max_Distance = 100
-			local Max_Speed = 1000
-			if Always_Distancing <= Max_Distance then
-				return Collection:TeleportCFrame(Position)  
-			end
-			if Always_Distancing > 1000 then 
-				Max_Speed = 1000
-			end
-		
-			if DistanceFromPart >= 150 then
-				InBetween_Part.CFrame = HumanoidRootPart.CFrame
-			end
-		
-			TweenService:Create(InBetween_Part, TweenInfo.new(Always_Distancing / Max_Speed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(Position)}):Play()
-			Collection:TeleportCFrame(InBetween_Part.CFrame)
-		else 
+	pcall(function()
+		local room = RoomCheck
+		if room and room:FindFirstChild("Floor") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum").Text == "☠️" then 
 			LocalPlayer.Character:PivotTo(Object * CFrame.new(0,-2,0))
+		else 
+			local distance = (LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - Object.Position).Magnitude
+			local Linear = LocalPlayer.Character:FindFirstChild("HumanoidRootPart").AssemblyLinearVelocity
+			LocalPlayer.Character:FindFirstChild("HumanoidRootPart").AssemblyLinearVelocity = Linear * Vector3.new(1, 0, 1, 0)
+			if distance >= 500 then 
+				local Position = (typeof(Object) == "CFrame") and Object.Position or Object
+				local HumanoidRootPart = Collection:GetRoot(LocalPlayer.Character)
+				local Always_Distancing =  Collection:GetSelfDistance(Position)
+				local InBetween_Part = Workspace:FindFirstChild("Deity-Tween") or Instance.new("Part",workspace)
+				for Proprerty,Value in pairs(Part_Proprerties) do InBetween_Part[Proprerty] = Value end
+				local DistanceFromPart = Collection:GetSelfDistance(InBetween_Part.Position)
+				local Max_Distance = 100
+				local Max_Speed = 1000
+				if Always_Distancing <= Max_Distance then
+					return Collection:TeleportCFrame(Position)  
+				end
+				if Always_Distancing > 1000 then 
+					Max_Speed = 1000
+				end
+			
+				if DistanceFromPart >= 150 then
+					InBetween_Part.CFrame = HumanoidRootPart.CFrame
+				end
+			
+				TweenService:Create(InBetween_Part, TweenInfo.new(Always_Distancing / Max_Speed, Enum.EasingStyle.Linear), {CFrame = CFrame.new(Position)}):Play()
+				Collection:TeleportCFrame(InBetween_Part.CFrame)
+			else 
+				LocalPlayer.Character:PivotTo(Object * CFrame.new(0,-2,0))
+			end 
 		end 
-	end 
+	end)
 end
 local FindChest = true
 function Collection:CollectChest(room)
-	RoomCheck = room
-	if RoomCheck then 
-		if RoomCheck:FindFirstChild("Chest") then 
-			local chest = RoomCheck:FindFirstChild("Chest")
-			if chest:FindFirstChild("ProximityPrompt") and not chest:FindFirstChild("ForceField") and chest:GetAttribute("Collected") == nil then 
-				FindChest = true 
-				if chest.ModelStreamingMode ~= "Persistent" then 
-					chest.ModelStreamingMode = "Persistent"
-				end 
-				if chest and chest:FindFirstChild("ProximityPrompt") and not chest:FindFirstChild("ForceField") then 
+	if room ~= nil then 
+		RoomCheck = room
+		if RoomCheck then 
+			if RoomCheck:FindFirstChild("Chest") then 
+				local chest = RoomCheck:FindFirstChild("Chest")
+				if chest:FindFirstChild("ProximityPrompt") and not chest:FindFirstChild("ForceField") and chest:GetAttribute("Collected") == nil then 
+					FindChest = true 
 					Collection:TeleportTo(chest:GetModelCFrame())
-					task.wait(.5)
-					fireproximityprompt(chest.ProximityPrompt)
-					chest:SetAttribute("Collected",true)
-					FindChest = false
+					if chest.ModelStreamingMode ~= "Persistent" then 
+						chest.ModelStreamingMode = "Persistent"
+					end 
+					task.wait()
+					if chest and chest:FindFirstChild("ProximityPrompt") and not chest:FindFirstChild("ForceField") then 
+						Collection:TeleportTo(chest:GetModelCFrame())
+						task.wait(.5)
+						fireproximityprompt(chest.ProximityPrompt)
+						chest:SetAttribute("Collected",true)
+						FindChest = false
+					end 
 				end 
 			end 
 		end 
-	end 
-	for i,v in pairs(game.Workspace.Tower:GetDescendants()) do 
-		if v.Name == "Chest" and v:FindFirstChild("ProximityPrompt") and not v:FindFirstChild("ForceField") and v:GetAttribute("Collected") == nil then 
-			Collection:TeleportTo(v:GetModelCFrame())
-			FindChest = true 
-			task.wait(.5)
-			if v.ModelStreamingMode ~= "Persistent" then 
-				v.ModelStreamingMode = "Persistent"
-			end 
-			if v and v:FindFirstChild("ProximityPrompt") and not v:FindFirstChild("ForceField") then 
+	else 
+		for i,v in pairs(game.Workspace.Tower:GetDescendants()) do 
+			if v.Name == "Chest" and v:FindFirstChild("ProximityPrompt") and not v:FindFirstChild("ForceField") and v:GetAttribute("Collected") == nil then 
 				Collection:TeleportTo(v:GetModelCFrame())
+				FindChest = true 
 				task.wait(.5)
-				fireproximityprompt(v.ProximityPrompt)
-				task.wait(v.ProximityPrompt.HoldDuration)
-				v:SetAttribute("Collected",true)
-				FindChest = false
-			end 
-		end
+				if v.ModelStreamingMode ~= "Persistent" then 
+					v.ModelStreamingMode = "Persistent"
+				end 
+				if v and v:FindFirstChild("ProximityPrompt") and not v:FindFirstChild("ForceField") then 
+					Collection:TeleportTo(v:GetModelCFrame())
+					task.wait(.5)
+					fireproximityprompt(v.ProximityPrompt)
+					task.wait(v.ProximityPrompt.HoldDuration)
+					v:SetAttribute("Collected",true)
+					FindChest = false
+				end 
+			end
+		end 
 	end 
 end 
 local findresult = false
 function Collection:Dice(room)
-	if room:FindFirstChild("Dice") and not findresult then 
-		Collection:TeleportTo(room:FindFirstChild("Dice"):FindFirstChild("Dice").CFrame)
-		task.wait(1)
-		fireproximityprompt(room:FindFirstChild("Dice"):FindFirstChild("Dice").ProximityPrompt)
-		task.wait(2)
-		findresult = true 
-		for i,v in pairs(room:FindFirstChild("Dice"):GetChildren()) do 
-			if v.Name ~= "Dice" then 
-				if not v:FindFirstChild("ForceField") then 
-					if v:FindFirstChild("Result") then 
-						Collection:TeleportTo(v:FindFirstChild("Result"):FindFirstChild("PrimaryPart").CFrame)
-						task.wait(1)
-						fireproximityprompt(v:FindFirstChild("Result").ProximityPrompt)
-						task.wait(1)
-						break
-					end 
-					if v:FindFirstChild("Skull") then 
-						TeleportService:Teleport(LobbyPlace, LocalPlayer)
-						task.wait(2)
-						--break
+	if room ~= nil and room:FindFirstChild("Dice") then 
+		if not findresult then 
+			Collection:TeleportTo(room:FindFirstChild("Dice"):FindFirstChild("Dice").CFrame)
+			task.wait(1)
+			fireproximityprompt(room:FindFirstChild("Dice"):FindFirstChild("Dice").ProximityPrompt)
+			task.wait(2)
+			findresult = true 
+			for i,v in pairs(room:FindFirstChild("Dice"):GetChildren()) do 
+				if v.Name ~= "Dice" then 
+					if not v:FindFirstChild("ForceField") then 
+						if v:FindFirstChild("Result") then 
+							Collection:TeleportTo(v:FindFirstChild("Result"):FindFirstChild("PrimaryPart").CFrame)
+							task.wait(1)
+							fireproximityprompt(v:FindFirstChild("Result").ProximityPrompt)
+							task.wait(1)
+							break
+						end 
+						if v:FindFirstChild("Skull") then 
+							TeleportService:Teleport(LobbyPlace, LocalPlayer)
+							task.wait(2)
+							--break
+						end 
 					end 
 				end 
 			end 
@@ -1115,6 +1130,7 @@ end
 local OldPos = nil
 local DontHeal = false
 function Collection:KillEnemyHandle(nearestEnemy,MPPercent)
+	nearestEnemy = Collection:getNearestEnemy()
 	if nearestEnemy and nearestEnemy:FindFirstChild("HumanoidRootPart") then 
 		print("FindRootPart")
 		OldPos = nearestEnemy:FindFirstChild("HumanoidRootPart").CFrame
@@ -1142,7 +1158,12 @@ function Collection:KillEnemyHandle(nearestEnemy,MPPercent)
 			nearestEnemy.ModelStreamingMode = "Persistent"
 		end 
 		if nearestEnemy:GetAttribute("IsSkillUsing") and nearestEnemy:GetAttribute("IsSkillUsing") == true and nearestEnemy:GetAttribute("IsBoss") == true then 
-			Collection:TeleportTo(nearestEnemy:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0, SaveSettings["Farm Distance"] + 5, 0))
+			if nearestEnemy:GetAttribute("IsBoss") == true then 
+				Collection:TeleportCFrame(nearestEnemy:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0, SaveSettings["Farm Distance"] + 5, 0))
+			else 
+				Collection:TeleportTo(nearestEnemy:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0, SaveSettings["Farm Distance"] + 5, 0))
+			end 
+			
 			local args = {
 				[1] = "HP"
 			}
@@ -1157,36 +1178,43 @@ function Collection:KillEnemyHandle(nearestEnemy,MPPercent)
 
 			game:GetService("ReplicatedStorage").Events.UsePotion:FireServer(unpack(args))
 		else 
-			Collection:TeleportTo(nearestEnemy:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0, 0, SaveSettings["Farm Distance"]))
+			if nearestEnemy:GetAttribute("IsBoss") == true then 
+				Collection:TeleportCFrame(nearestEnemy:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0, SaveSettings["Farm Distance"] + 5, 0))
+			else 
+				Collection:TeleportTo(nearestEnemy:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0, 0, SaveSettings["Farm Distance"]))
+			end 
 		end 
 		Collection:Attack(nearestEnemy:FindFirstChild("HumanoidRootPart").Position)
 
 	else 
-		print("DondFind")
 		local Mp = LocalPlayer.Character:GetAttribute("MP")
 		local MaxMp = LocalPlayer.Character:GetAttribute("MaxMP")
 		local MPPercent = math.floor((tonumber(Mp) / tonumber(MaxMp)) * 100)
-		if nearestEnemy then 
-			Collection:TeleportTo(nearestEnemy:GetModelCFrame())
-			nearestEnemy = Collection:getNearestEnemy()
-			Collection:KillEnemyHandle(nearestEnemy,MPPercent)
+		if OldPos then 
+			print("Teleport To Old Pls")
+			Collection:TeleportTo(OldPos)
 		else 
-			
-			Collection:CollectChest(room)
-			if OldPos then 
-				Collection:TeleportTo(OldPos)
-				nearestEnemy = Collection:getNearestEnemy()
-				Collection:KillEnemyHandle(nearestEnemy,MPPercent)
-			else 
+			--print("Teleport To Portal")
+			if room ~= nil then 
 				Collection:TeleportPortal(room)
+			else 
+				nearestEnemy = Collection:getNearestEnemy()
+				if nearestEnemy then 
+					--print("FindNearestEnemy")
+					Collection:TeleportCFrame(nearestEnemy:GetModelCFrame())
+					
+				else 
+					print("Don't Find")
+					Collection:CollectChest(room)
+					Collection:ExitDungeon(room)
+				end 
 			end 
-			Collection:ExitDungeon(room)
 		end 
 	end 
 end 
 
 function Collection:ExitDungeon(room)
-	if room:FindFirstChild("Floor") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum").Text == "☠️" then 
+	if room ~= nil and room:FindFirstChild("Floor") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum").Text == "☠️" then 
 			Collection:CollectChest(room)
 			nearestEnemy = Collection:getNearestEnemy()
 			Collection:CollectChest(room)
@@ -1206,33 +1234,35 @@ end
 local justteleport = false
 local oldportalpos = nil
 function Collection:TeleportPortal(room)
-	Collection:Dice(room)
-	Collection:CollectChest(room)
-
-	local portal = room:FindFirstChild("Out") and room:FindFirstChild("Out"):FindFirstChild("Portal")
-	if portal and not justteleport then
-		local player = game.Players.LocalPlayer
-		local character = player.Character or player.CharacterAdded:Wait()
-		local hrp = character:WaitForChild("HumanoidRootPart")
-
-		local oldPos = hrp.Position
-		local startTime = tick()
-
-		Collection:TeleportTo(portal.CFrame )
-
-		local timeout = .5
-		repeat
-			task.wait(0.1)
-		until (hrp.Position - oldPos).Magnitude > 5 or tick() - startTime > timeout or not SaveSettings["Auto Farm"]
-		task.wait(.1)
-		if (hrp.Position - oldPos).Magnitude <= 5 then
-			warn("Teleport failed or took too long. Retrying...")
-			Collection:TeleportTo(portal.CFrame * CFrame.new(0, 0, 5))
+	if room ~= nil then 
+		Collection:Dice(room)
+		Collection:CollectChest(room)
+	
+		local portal = room:FindFirstChild("Out") and room:FindFirstChild("Out"):FindFirstChild("Portal")
+		if portal and not justteleport then
+			local player = game.Players.LocalPlayer
+			local character = player.Character or player.CharacterAdded:Wait()
+			local hrp = character:WaitForChild("HumanoidRootPart")
+	
+			local oldPos = hrp.Position
+			local startTime = tick()
+	
+			Collection:TeleportTo(portal.CFrame )
+	
+			local timeout = .5
+			repeat
+				task.wait(0.1)
+			until (hrp.Position - oldPos).Magnitude > 5 or tick() - startTime > timeout or not SaveSettings["Auto Farm"]
 			task.wait(.1)
-			Collection:TeleportTo(portal.CFrame)
-			task.wait(.1)
+			if (hrp.Position - oldPos).Magnitude <= 5 then
+				warn("Teleport failed or took too long. Retrying...")
+				Collection:TeleportTo(portal.CFrame * CFrame.new(0, 0, 5))
+				task.wait(.1)
+				Collection:TeleportTo(portal.CFrame)
+				task.wait(.1)
+			end
 		end
-	end
+	end 
 end 
 
 local modifications = {
@@ -1286,15 +1316,16 @@ function handleRoom(room)
 					LocalPlayer.Character:FindFirstChild("Humanoid").Sit = false
 				end 
 				if not DontHeal and (healthPercent <= SaveSettings["Hp Regen Percent"] or MPPercent <= SaveSettings["MP Regen Percent"])  then
-					if room:FindFirstChild("Floor") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum").Text == "☠️" then 
+					if nearestEnemy:GetAttribute("IsBoss") == true or room:FindFirstChild("Floor") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum").Text == "☠️" then 
 						if room.ModelStreamingMode ~= "Persistent" then 
 							room.ModelStreamingMode = "Persistent"
 						end 
 						local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
 						local healthPercent = math.floor((humanoid.Health / humanoid.MaxHealth) * 100)
 						local mpPercent = math.floor((tonumber(Mp) / tonumber(MaxMp)) * 100)
-						--Collection:TeleportTo(StartCampPos)
-						LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = StartCampPos
+						Collection:TeleportCFrame(workspace.Tower.StartRoom.Campfire.Hitbox.CFrame)
+						
+						--LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = StartCampPos
 						-- print("Recovery")
 						local args = {
 							[1] = "HP"
@@ -1302,7 +1333,6 @@ function handleRoom(room)
 		
 						game:GetService("ReplicatedStorage").Events.UsePotion:FireServer(unpack(args))
 	
-						Collection:CollectChest(room)
 	
 						local args = {
 							[1] = "MP"
@@ -1317,16 +1347,14 @@ function handleRoom(room)
 							local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
 							local healthPercent = math.floor((humanoid.Health / humanoid.MaxHealth) * 100)
 							local mpPercent = math.floor((tonumber(Mp) / tonumber(MaxMp)) * 100)
-							--Collection:TeleportTo(StartCampPos)
-							LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = StartCampPos
+							Collection:TeleportCFrame(workspace.Tower.StartRoom.Campfire.Hitbox.CFrame)
+							--LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = workspace.Tower.StartRoom.Campfire:GetModelCFrame()
 							print("Recovery")
 							local args = {
 								[1] = "HP"
 							}
 		
 							game:GetService("ReplicatedStorage").Events.UsePotion:FireServer(unpack(args))
-	
-							Collection:CollectChest(room)
 	
 							local args = {
 								[1] = "MP"
@@ -1336,10 +1364,11 @@ function handleRoom(room)
 							justteleport = true 
 	
 							task.wait()
-						until ( room:FindFirstChild("Floor") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum").Text == "☠️") or (LocalPlayer.Character:FindFirstChildOfClass("Humanoid").Health >= LocalPlayer.Character:FindFirstChildOfClass("Humanoid").MaxHealth and tonumber(LocalPlayer.Character:GetAttribute("MP")) >= tonumber(LocalPlayer.Character:GetAttribute("MaxMP"))) 
+						until nearestEnemy:GetAttribute("IsBoss") == true or ( room:FindFirstChild("Floor") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum") and room:FindFirstChild("Floor"):FindFirstChild("SurfaceGui"):FindFirstChild("RoomNum").Text == "☠️") or (LocalPlayer.Character:FindFirstChildOfClass("Humanoid").Health >= LocalPlayer.Character:FindFirstChildOfClass("Humanoid").MaxHealth and tonumber(LocalPlayer.Character:GetAttribute("MP")) >= tonumber(LocalPlayer.Character:GetAttribute("MaxMP"))) 
 							or _G.BreakAllFunction 
 							or not SaveSettings["Auto Farm"]					
 							justteleport = false 
+							Collection:CollectChest(room)
 					end 
 						
 				else
@@ -1533,16 +1562,19 @@ FunctionTask["Auto Farm"] = function()
 						
 						for roomName, room in pairs(rooms) do
 							if room then
-								if Collection:CheckMagnitude(room:GetModelCFrame().Position) <= 300 then
+								if Collection:CheckMagnitude(room:GetModelCFrame().Position) <= 500 then
 									if room.Name == "StartRoom" then 
+										if room.ModelStreamingMode ~= "Persistent" then 
+											room.ModelStreamingMode = "Persistent"
+										end 
 										Collection:TeleportPortal(room)
 									end 
 									if StartCampPos == nil and tower:FindFirstChild("StartRoom"):FindFirstChild("Campfire"):FindFirstChild("Hitbox") then 
 										StartCampPos = workspace.Tower.StartRoom.Campfire.Hitbox.CFrame * CFrame.new(0,3,0)
+										
 									else 
 										StartCampPos = workspace.Tower.StartRoom.Campfire:GetModelCFrame() * CFrame.new(0,3,0)
 									end 
-									Collection:CollectChest(room)
 									handleRoom(room)
 								end
 							end

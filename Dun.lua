@@ -1,4 +1,4 @@
--- New3
+-- New4
 local Debug = true
 
 --LPH_NO_UPVALUES = function(...) return ... end
@@ -638,7 +638,7 @@ Collection:AddToggle(Main,"Invasions",false)
 Collection:AddToggle(Main,"Use Modify",false)
 Collection:AddDropdown(Main,"Modify",{"NoPotions","ReduceMaxHPBy70","NoCampfires","NoMana","EliteEnemiesOnly","NoChests","Mobs2xHP","ReduceDamageBy50","Damage2x"},{},true)
 
-Main:Section({ Title = "Auto Farm Settings" })
+
 
 Main:Section({ Title = "Party" })
 
@@ -665,6 +665,8 @@ local PlayerRemoveConnection = game.Players.ChildRemoved:Connect(function()
 	end)
 end)
 --Collection:AddDropdown(Main,"Position",{"Above","Below","Behide"},"Above",false)
+
+Main:Section({ Title = "Auto Farm Settings" })
 
 Collection:AddToggle(Main,"Full Auto Farm Level",false)
 Collection:AddSlider(Main,"Farm Distance",1,20,5)
@@ -1113,13 +1115,9 @@ end
 local OldPos = nil
 local DontHeal = false
 function Collection:KillEnemyHandle(nearestEnemy,MPPercent)
-	if nearestEnemy and (nearestEnemy:FindFirstChild("HumanoidRootPart") or nearestEnemy:IsA("Model")) then 
+	if nearestEnemy and nearestEnemy:FindFirstChild("HumanoidRootPart") then 
 		print("FindRootPart")
-		if nearestEnemy:FindFirstChild("HumanoidRootPart") then 
-			OldPos = nearestEnemy:FindFirstChild("HumanoidRootPart").CFrame
-		else 
-			OldPos = nearestEnemy:GetModelCFrame()
-		end 
+		OldPos = nearestEnemy:FindFirstChild("HumanoidRootPart").CFrame
 		if SaveSettings["Auto Use Class Skill"] then
 			for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.HotBar.Info.ClassSkill:GetChildren()) do 
 				if v:IsA("TextButton") and MPPercent >= 25 then 
@@ -1140,12 +1138,11 @@ function Collection:KillEnemyHandle(nearestEnemy,MPPercent)
 				end 
 			end 
 		end 
+		if nearestEnemy.ModelStreamingMode ~= "Persistent" then 
+			nearestEnemy.ModelStreamingMode = "Persistent"
+		end 
 		if nearestEnemy:GetAttribute("IsSkillUsing") and nearestEnemy:GetAttribute("IsSkillUsing") == true and nearestEnemy:GetAttribute("IsBoss") == true then 
-			if nearestEnemy:FindFirstChild("HumanoidRootPart") then 
-				Collection:TeleportTo(nearestEnemy:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0, SaveSettings["Farm Distance"] + 5, 0))
-			else 
-				Collection:TeleportTo(nearestEnemy:GetModelCFrame() * CFrame.new(0, SaveSettings["Farm Distance"] + 5, 0))
-			end 
+			Collection:TeleportTo(nearestEnemy:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0, SaveSettings["Farm Distance"] + 5, 0))
 			local args = {
 				[1] = "HP"
 			}
@@ -1160,17 +1157,9 @@ function Collection:KillEnemyHandle(nearestEnemy,MPPercent)
 
 			game:GetService("ReplicatedStorage").Events.UsePotion:FireServer(unpack(args))
 		else 
-			if nearestEnemy:FindFirstChild("HumanoidRootPart") then 
-				Collection:TeleportTo(nearestEnemy:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0, 0, SaveSettings["Farm Distance"]))
-			else 
-				Collection:TeleportTo(nearestEnemy:GetModelCFrame() * CFrame.new(0, 0, SaveSettings["Farm Distance"]))
-			end 
+			Collection:TeleportTo(nearestEnemy:FindFirstChild("HumanoidRootPart").CFrame * CFrame.new(0, 0, SaveSettings["Farm Distance"]))
 		end 
-		if nearestEnemy:FindFirstChild("HumanoidRootPart") then 
-			Collection:Attack(nearestEnemy:FindFirstChild("HumanoidRootPart").Position)
-		else 
-			Collection:Attack(nearestEnemy:GetModelCFrame().Position)
-		end 
+		Collection:Attack(nearestEnemy:FindFirstChild("HumanoidRootPart").Position)
 
 	else 
 		print("DondFind")
@@ -1231,7 +1220,7 @@ function Collection:TeleportPortal(room)
 
 		Collection:TeleportTo(portal.CFrame )
 
-		local timeout = .5 
+		local timeout = .5
 		repeat
 			task.wait(0.1)
 		until (hrp.Position - oldPos).Magnitude > 5 or tick() - startTime > timeout or not SaveSettings["Auto Farm"]
@@ -1545,6 +1534,9 @@ FunctionTask["Auto Farm"] = function()
 						for roomName, room in pairs(rooms) do
 							if room then
 								if Collection:CheckMagnitude(room:GetModelCFrame().Position) <= 300 then
+									if room.Name == "StartRoom" then 
+										Collection:TeleportPortal(room)
+									end 
 									if StartCampPos == nil and tower:FindFirstChild("StartRoom"):FindFirstChild("Campfire"):FindFirstChild("Hitbox") then 
 										StartCampPos = workspace.Tower.StartRoom.Campfire.Hitbox.CFrame * CFrame.new(0,3,0)
 									else 
@@ -1580,6 +1572,10 @@ spawn(function()
 		if _G.BreakAllFunction then
 			break
 		end
+		if game.PlaceId ~= LobbyPlace then
+			task.wait()
+			break
+		end 
 		if SaveSettings["Auto Party"] and game.PlaceId == LobbyPlace then 
 			if DontLeave == true then 
 				task.wait(10)
@@ -1591,9 +1587,13 @@ spawn(function()
 end )
 FunctionTask["Auto Party"] = function()
 	while true do
+		task.wait()
 		if _G.BreakAllFunction then
 			break
 		end
+        if game.PlaceId ~= LobbyPlace then
+			break
+		end 
 		local Succ,Err = pcall(function()
 			if SaveSettings["Auto Party"] and game.PlaceId == LobbyPlace then
 				count = #SaveSettings["Player Name"] 
@@ -2210,4 +2210,3 @@ ImageButton.Activated:Connect(function()
 		Window:Open()
 	end
 end)
--- New

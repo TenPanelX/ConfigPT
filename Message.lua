@@ -68,13 +68,21 @@ end
 
 local messageSets = {
     {
-        "Hi bro",
-        "pls give me ak",
+        "Hi bro"
+    },
+    {
+        "pls give me ak"
+    },
+    {
         "can u help me grinding"
     },
     {
-        "u griding alone right ?",
-        "for reallll",
+        "u griding alone right ?"
+    },
+    {
+        "for reallll"
+    },
+    {
         "Bye byee!!"
     }
 }

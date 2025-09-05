@@ -68,9 +68,14 @@ end
 
 local messageSets = {
     {
-        "Hi bro plss",
-        "Can u help me",
-        "idk why"
+        "Hi bro",
+        "pls give me ak",
+        "can u help me grinding"
+    },
+    {
+        "u griding alone right ?",
+        "for reallll",
+        "Bye byee!!"
     }
 }
 
@@ -78,7 +83,7 @@ while true do
     for _, set in ipairs(messageSets) do
         for _, msg in ipairs(set) do
             sendChat(msg)
-            task.wait(10)
+            task.wait(8)
         end
         task.wait(1) 
     end

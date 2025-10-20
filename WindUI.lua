@@ -1,3 +1,5 @@
+print("WindUI Checking, Install...")
+
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local TeleportService = game:GetService("TeleportService")

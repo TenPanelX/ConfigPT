@@ -4,7 +4,7 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local TeleportService = game:GetService("TeleportService")
 
-local WAIT_TIME = 200
+local WAIT_TIME = 250
 
 local function checkFrameVisible()
     local core = game:GetService("CoreGui")

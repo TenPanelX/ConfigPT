@@ -17,5 +17,6 @@ getgenv().Configs = {
         ["Enabled"] = true,
         ["Count Over"] = 6,
         ["Time"] = 10
-    }
+    },
+    ["OBSEAO!2124S"] = true -- ตีกันเองไหม
 }

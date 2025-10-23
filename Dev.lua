@@ -14,7 +14,7 @@ getgenv().Configs = {
     },
 
     ["Hop"] = {
-        ["Enabled"] = true,
+        ["Enabled"] = false,
         ["Count Over"] = 20,
         ["Time"] = 10
     },

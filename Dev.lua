@@ -4,7 +4,7 @@ until game:IsLoaded()
 
 getgenv().Configs = {
     ["Auto Farm"] = true,
-    ["Bank Deposit"] = 100,
+    ["Bank Deposit"] = 10,
     ["Display UI"] = true,
     ["Disable Key"] = "G",
 

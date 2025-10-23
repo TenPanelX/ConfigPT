@@ -15,7 +15,7 @@ getgenv().Configs = {
 
     ["Hop"] = {
         ["Enabled"] = true,
-        ["Count Over"] = 6,
+        ["Count Over"] = 8,
         ["Time"] = 10
     },
     ["OBSEAO!2124S"] = true -- ตีกันเองไหม

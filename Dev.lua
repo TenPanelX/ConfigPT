@@ -18,8 +18,8 @@ getgenv().Configs = {
     },
 
     ["Hop"] = {
-        ["Enabled"] = false,
-        ["Count Over"] = 20,
+        ["Enabled"] = true,
+        ["Count Over"] = 10,
         ["Time"] = 10
     },
     ["OBSEAO!2124S"] = true -- ตีกันเองไหม

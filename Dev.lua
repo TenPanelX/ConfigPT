@@ -3,6 +3,10 @@ repeat
 until game:IsLoaded()
 
 task.spawn(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/TenPanelX/ConfigPT/refs/heads/main/ClickButton.lua"))()
+end)
+
+task.spawn(function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/TenPanelX/ConfigPT/refs/heads/main/Addfriend.lua"))()
 end)
 

@@ -1,3 +1,4 @@
+-- Private Script Block Spin
 print("KaitunUI Checking, Install...")
 
 local Players = game:GetService("Players")

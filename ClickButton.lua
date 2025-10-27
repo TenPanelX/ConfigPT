@@ -14,7 +14,7 @@ getgenv().firesignal = function(button)
     GuiService.SelectedObject = nil;
 end;
 
-while task.wait(1) do
+while task.wait(10) do
     local Player = game:GetService("Players")
 
     local Check = Player.LocalPlayer.PlayerGui.CharacterCreator.Enabled

@@ -8,7 +8,7 @@ end)
 
 getgenv().Configs = {
     ["Auto Farm"] = true,
-    ["Bank Deposit"] = 10,
+    ["Bank Deposit"] = 20,
     ["Display UI"] = true,
     ["Disable Key"] = "G",
 
@@ -18,7 +18,7 @@ getgenv().Configs = {
     },
 
     ["Hop"] = {
-        ["Enabled"] = true,
+        ["Enabled"] = false,
         ["Count Over"] = 10,
         ["Time"] = 10
     },

@@ -1,3 +1,8 @@
+getgenv().MY_CONFIG = {
+    PC_NAME = "PC",
+    LICENSE_KEY = "LICENSE_KEY_FOR_SfjL2p0stDJp4NpV"
+}
+
 -- [!!!] แก้ไข IP ใหม่ตรงนี้ [!!!]
 local WEB_API_URL = "http://117.18.126.63:3000/api/update_full_status" -- <<< IP VPS (ใหม่)
 

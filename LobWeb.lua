@@ -17,23 +17,23 @@ local function trim(s) return s:gsub("^%s*(.-)%s*$", "%1") end
 -- [!] แก้ไข cleanCurrencyToNumber + Debug Print ภายใน
 local function cleanCurrencyToNumber(amount)
     if type(amount) ~= "string" then
-        print("[CLEAN DEBUG] Input is not a string:", amount)
+        -- print("[CLEAN DEBUG] Input is not a string:", amount)
         return nil
     end
-    print("[CLEAN DEBUG] Original:", amount)
+    -- print("[CLEAN DEBUG] Original:", amount)
 
     -- Step 1: ลบทุกอย่างที่ไม่ใช่ตัวเลข (รวมถึง $, , และตัวอักษรอื่นๆ)
     -- %D คือ "non-digit character"
     local only_digits = amount:gsub("%D", "")
-    print("[CLEAN DEBUG] After removing non-digits:", only_digits)
+    -- print("[CLEAN DEBUG] After removing non-digits:", only_digits)
 
     -- Step 2: แปลงเป็นตัวเลข
     local final_number = tonumber(only_digits)
-    print("[CLEAN DEBUG] Final number:", final_number)
+    -- print("[CLEAN DEBUG] Final number:", final_number)
 
     -- ตรวจสอบว่าแปลงสำเร็จหรือไม่
     if final_number == nil then
-        print("[CLEAN DEBUG] ERROR: tonumber failed!")
+        -- print("[CLEAN DEBUG] ERROR: tonumber failed!")
     end
 
     return final_number
@@ -75,13 +75,13 @@ local function CollectAndSendData()
     if Money and Money.ContentText then rawHandText = Money.ContentText end
     if BankMoney and BankMoney.ContentText then rawBankText = BankMoney.ContentText end
 
-    print("[DEBUG] Raw Hand Text:", rawHandText) -- Debug หลัก
+    -- print("[DEBUG] Raw Hand Text:", rawHandText) -- Debug หลัก
     local handAmount = cleanCurrencyToNumber(rawHandText) -- เรียกใช้ฟังก์ชันที่ปรับปรุงแล้ว
-    print("[DEBUG] Cleaned Hand Amount:", handAmount) -- Debug หลัก
+    -- print("[DEBUG] Cleaned Hand Amount:", handAmount) -- Debug หลัก
 
-    print("[DEBUG] Raw Bank Text:", rawBankText) -- Debug หลัก
+    -- print("[DEBUG] Raw Bank Text:", rawBankText) -- Debug หลัก
     local bankAmount = cleanCurrencyToNumber(rawBankText) -- เรียกใช้ฟังก์ชันที่ปรับปรุงแล้ว
-    print("[DEBUG] Cleaned Bank Amount:", bankAmount) -- Debug หลัก
+    -- print("[DEBUG] Cleaned Bank Amount:", bankAmount) -- Debug หลัก
 
 
     -- 3. ตรวจสอบ Server (เหมือนเดิม)
@@ -106,7 +106,7 @@ local function CollectAndSendData()
     local success, response = pcall(function() request(requestOptions) end)
 
     if success then print("[REQUEST] SUCCESS: Sent update.")
-    else print("[REQUEST] ERROR: " .. tostring(response)) end
+    else -- print("[REQUEST] ERROR: " .. tostring(response)) end
 end
 
 -- ลูปหลัก (เหมือนเดิม)

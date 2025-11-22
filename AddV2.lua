@@ -49,7 +49,7 @@ task.spawn(function()
             end
         end
 
-        -- รอ 60 วินาทีแล้วทำใหม่
-        task.wait(60)
+        -- รอ 30 วินาทีก่อนทำใหม่
+        task.wait(30)
     end
 end)

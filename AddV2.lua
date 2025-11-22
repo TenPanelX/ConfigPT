@@ -39,12 +39,12 @@ task.spawn(function()
                     pcall(function()
                         LocalPlayer:RequestFriendship(player)
                     end)
-                    task.wait(0.25)
+                    task.wait(0.3)
                 end
             end
         end
 
         print("AddedV2")
-        task.wait(30)
+        task.wait(60)
     end
 end)

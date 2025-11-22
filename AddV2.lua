@@ -1,4 +1,4 @@
--- version 0.1
+-- version 0.2
 repeat task.wait() until game:IsLoaded()
 
 local Players = game:GetService("Players")
@@ -45,6 +45,6 @@ task.spawn(function()
         end
 
         print("AddedV2")
-        task.wait(60)
+        task.wait(30)
     end
 end)

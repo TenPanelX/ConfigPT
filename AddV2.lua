@@ -29,17 +29,24 @@ end
 
 task.spawn(function()
     while true do
-        -- โหลด whitelist ชื่อ
         local allowedNames = loadAllowedNames()
 
         for _, player in pairs(Players:GetPlayers()) do
             if player ~= LocalPlayer then
+                -- อยู่ในลิสต์?
                 if allowedNames[player.Name] then
-                    print("[FriendRequest] Sending to:", player.Name)
-                    pcall(function()
-                        LocalPlayer:RequestFriendship(player)
-                    end)
-                    task.wait(0.3)
+
+                    -- ถ้าเป็นเพื่อนอยู่แล้ว → ข้าม
+                    if LocalPlayer:IsFriendsWith(player.UserId) then
+                        print("[FriendRequest] Skip (already friends):", player.Name)
+                    else
+                        print("[FriendRequest] Sending to:", player.Name)
+                        pcall(function()
+                            LocalPlayer:RequestFriendship(player)
+                        end)
+                        task.wait(0.25)
+                    end
+
                 end
             end
         end

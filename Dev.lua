@@ -8,9 +8,8 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    task.wait(30)
+    task.wait(10)
     loadstring(game:HttpGet("https://raw.githubusercontent.com/TenPanelX/ConfigPT/refs/heads/main/AddV2.lua"))()
-    print("AddV2")
 end)
 
 getgenv().Configs = {

@@ -45,7 +45,7 @@ getgenv().HermanosDevSetting = {
         AfkChecker = true,
 
         -- Deposit
-        CashDeposit = 50,
+        CashDeposit = 200,
         AutoDeposit = true
     },
 
